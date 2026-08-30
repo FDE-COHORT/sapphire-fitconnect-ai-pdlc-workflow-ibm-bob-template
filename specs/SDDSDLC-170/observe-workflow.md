@@ -91,3 +91,29 @@
 - Workflow state: `PHASE_6_PENDING`
 
 ---
+
+## Observation — tasks phase — 2025-08-25T00:00:00Z
+
+### Task
+- **Phase**: speckit-tasks (SDDSDLC-170)
+- **Note**: Runs in the same Bob session as specify/clarify/plan phases. Token metrics cumulative — recorded in the specify phase entry. No separate DB record for this phase.
+
+### Artifact Generated
+- `specs/SDDSDLC-170/tasks.md` — 52 tasks across 5 repos and 3 user stories
+
+### Task Breakdown
+| Phase | Scope | Tasks |
+|-------|-------|-------|
+| Phase 1 — Setup | Branch creation (5 repos) | 5 |
+| Phase 2 — Foundational | Avro schema, TimescaleDB, Python config | 7 |
+| Phase 3 — US1 (P1) | Ingestion (sapphire-event-ingestion-api) | 9 |
+| Phase 4 — US2 (P2) | Charts (charting-api + bff-api + Sapphire) | 19 |
+| Phase 5 — US3 (P3) | Export + docs (charting-api + bff-api) | 5 |
+| Phase 6 — Polish | Observability, coverage, E2E | 7 |
+| **Total** | | **52** |
+
+### Outcome
+- Workflow state: `PHASE_7_PENDING`
+- Pushed to `origin/SDDSDLC-170` (commit `0a5fc99`)
+
+---
