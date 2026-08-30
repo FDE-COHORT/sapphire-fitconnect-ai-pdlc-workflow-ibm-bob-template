@@ -1,0 +1,129 @@
+# Contract: Charting API — Body Temperature
+# sapphire-charting-api
+# SDDSDLC-170
+
+openapi: "3.1.0"
+info:
+  title: Sapphire Charting API — Body Temperature Extension
+  version: "1.1.0"
+
+paths:
+  /users/{userId}/body-temperature/chart:
+    get:
+      summary: Get body temperature trend data for charting
+      operationId: getBodyTemperatureChart
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: range
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [day, week, month]
+          description: |
+            Time range for aggregation:
+            - day: hourly aggregates, last 24h
+            - week: daily aggregates, last 7 days
+            - month: weekly aggregates, last 30 days
+        - name: unit
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [C, F]
+            default: C
+          description: Display unit for returned values (default Celsius)
+        - name: deviceSource
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional filter by device source identifier
+      responses:
+        '200':
+          description: Temperature trend data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemperatureTrendResponse'
+        '401':
+          description: Missing or invalid Keycloak JWT
+        '403':
+          description: JWT user does not match userId path parameter
+        '404':
+          description: No temperature data found for the user / range combination
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyTrendResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TemperatureTrendResponse:
+      type: object
+      required: [userId, range, unit, dataPoints]
+      properties:
+        userId:
+          type: string
+          format: uuid
+        range:
+          type: string
+          enum: [day, week, month]
+        unit:
+          type: string
+          enum: [C, F]
+        dataPoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemperatureTrendPoint'
+
+    TemperatureTrendPoint:
+      type: object
+      required: [windowStart, windowEnd, minValue, maxValue, avgValue, recordCount]
+      properties:
+        windowStart:
+          type: string
+          format: date-time
+          description: ISO 8601 UTC start of the aggregation window
+        windowEnd:
+          type: string
+          format: date-time
+          description: ISO 8601 UTC end of the aggregation window
+        minValue:
+          type: number
+          format: double
+          description: Minimum temperature value in the requested unit
+        maxValue:
+          type: number
+          format: double
+        avgValue:
+          type: number
+          format: double
+        recordCount:
+          type: integer
+          description: Number of raw readings in this window
+
+    EmptyTrendResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        range:
+          type: string
+        message:
+          type: string
+          example: "No temperature data found for the requested range"
