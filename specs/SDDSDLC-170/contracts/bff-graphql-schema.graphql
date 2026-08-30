@@ -1,0 +1,65 @@
+# Contract: BFF GraphQL Schema Extension
+# sapphire-bff-api
+# SDDSDLC-170
+
+"""
+Extension to the Sapphire BFF GraphQL schema to expose body temperature
+chart data to the frontend.
+
+Add the following types and query to the existing schema.
+"""
+
+# ─── Scalars (use existing DateTime scalar if already defined) ────────────────
+scalar DateTime
+
+# ─── Enums ───────────────────────────────────────────────────────────────────
+enum TemperatureChartRange {
+  DAY
+  WEEK
+  MONTH
+}
+
+enum TemperatureUnit {
+  C
+  F
+}
+
+# ─── Input types ─────────────────────────────────────────────────────────────
+input BodyTemperatureChartInput {
+  userId: ID!
+  range: TemperatureChartRange!
+  """
+  Display unit for returned values. Defaults to C (Celsius) if omitted.
+  """
+  unit: TemperatureUnit
+  """
+  Optional filter by device source identifier.
+  """
+  deviceSource: String
+}
+
+# ─── Output types ─────────────────────────────────────────────────────────────
+type BodyTemperatureChartResult {
+  userId: ID!
+  range: TemperatureChartRange!
+  unit: TemperatureUnit!
+  dataPoints: [BodyTemperatureTrendPoint!]!
+}
+
+type BodyTemperatureTrendPoint {
+  windowStart: DateTime!
+  windowEnd:   DateTime!
+  minValue:    Float!
+  maxValue:    Float!
+  avgValue:    Float!
+  recordCount: Int!
+}
+
+# ─── Query extension ──────────────────────────────────────────────────────────
+"""
+Add this field to the existing Query type.
+Returns null (not an error) if no temperature data exists for the given range.
+"""
+extend type Query {
+  bodyTemperatureChart(input: BodyTemperatureChartInput!): BodyTemperatureChartResult
+}
