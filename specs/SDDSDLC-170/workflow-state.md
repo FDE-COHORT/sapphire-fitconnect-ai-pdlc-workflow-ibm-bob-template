@@ -7,14 +7,14 @@
 - Last Updated: 2025-08-25
 
 ## CURRENT_STAGE
-PHASE_3_PENDING
+PHASE_3A_PENDING
 
 ## Completed Phases
 - [x] Phase 1: Constitution Verified
 - [x] Phase 2: Story Fetched
 - [x] CHECKPOINT 1: Story Confirmed
-- [ ] Phase 3: Specification Created
-- [ ] CHECKPOINT 2: Submitter Review
+- [x] Phase 3: Specification Created
+- [x] CHECKPOINT 2: Submitter Review
 - [ ] Phase 3A: Spec PR Raised
 - [ ] Phase 3B: Spec PR Approved
 - [ ] Phase 3C: Plan Entry Gates

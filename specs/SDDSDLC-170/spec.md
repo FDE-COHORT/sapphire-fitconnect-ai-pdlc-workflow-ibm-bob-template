@@ -48,9 +48,9 @@ rejection with an error message referencing the range violation.
    the invalid value, and the acceptable range.
 
 5. **Given** the ingestion endpoint receives a batch containing a mix of valid and invalid
-   temperature readings, **When** the batch is processed, **Then** all invalid records are
-   rejected with per-record error details and valid records are published, or the entire
-   batch is rejected — the behaviour is consistent and documented.
+   temperature readings, **When** the batch is processed, **Then** valid records are published
+   to the Kafka topic and the response returns HTTP 207 Multi-Status with a per-record result
+   list — each entry indicating success or the specific validation error for that record.
 
 6. **Given** the ingestion endpoint is called without a valid Keycloak JWT, **When** the
    request arrives, **Then** the system returns HTTP 401 and does not publish any event.
@@ -113,10 +113,11 @@ appears when no data exists.
 
 ### User Story 3 - Temperature Data in Analytics Export and Partner Sharing (Priority: P3)
 
-A user or their designated healthcare provider can access temperature data through the
-analytics export endpoints. Temperature metrics appear alongside other health metrics in the
-user's analytics summary. Schema documentation for the temperature metric is available to
-integration partners.
+A user can access their own temperature data through the analytics export endpoints using
+their own Keycloak credentials. Healthcare provider access is out of scope for this story —
+providers may receive exported data only if the user manually shares it. Temperature metrics
+appear alongside other health metrics in the user's analytics summary. Schema documentation
+for the temperature metric is available to integration partners.
 
 **Why this priority**: Export and partner sharing extend the reach of the feature but are
 not required for the core health-tracking use case. This story delivers the remaining
@@ -145,6 +146,10 @@ all fields defined.
 4. **Given** the analytics export endpoint is called without a valid Keycloak JWT, **When**
    the request arrives, **Then** the system returns HTTP 401 and returns no data.
 
+5. **Given** a user attempts to access another user's temperature export data using their
+   own JWT, **When** the request is processed, **Then** the system returns HTTP 403 and
+   returns no data (user-scoped access enforced).
+
 ---
 
 ### Edge Cases
@@ -164,6 +169,8 @@ all fields defined.
 - What happens when a batch contains 0 records? The API must return HTTP 400.
 - What happens when a batch exceeds the maximum record count (100)? The API must return
   HTTP 422 with a clear error message.
+- What happens when a user exceeds the ingestion rate limit? The system must return HTTP 429
+  with a `Retry-After` header indicating when the client may retry.
 
 ## Requirements *(mandatory)*
 
@@ -171,8 +178,14 @@ all fields defined.
 
 - **FR-001**: The system MUST accept body temperature readings via the health telemetry
   ingestion endpoint, supporting both single-record and batch (up to 100 records) input.
+  For batches containing a mix of valid and invalid records, the system MUST use partial-accept
+  semantics: valid records are published to Kafka and the response MUST be HTTP 207 Multi-Status
+  with a per-record result array identifying successes and field-level errors for invalid records.
 - **FR-002**: The system MUST support both Celsius and Fahrenheit as input units for
   temperature readings.
+- **FR-003a**: The ingestion endpoint MUST enforce a per-user rate limit of 1,000 temperature
+  readings per minute. Requests exceeding this limit MUST be rejected with HTTP 429 and a
+  `Retry-After` response header specifying the number of seconds until the limit resets.
 - **FR-003**: The system MUST validate temperature values against a configurable
   physiological range (default: 30.0°C–45.0°C / 86.0°F–113.0°F) and MUST reject out-of-range
   values with HTTP 422 and a field-level error message identifying the value and the
@@ -204,6 +217,12 @@ all fields defined.
   ships.
 - **FR-015**: All ingestion endpoints MUST require a valid Keycloak JWT; unauthenticated
   requests MUST be rejected with HTTP 401.
+- **FR-016**: All new temperature-related service paths (ingestion, charting, export) MUST
+  be instrumented with OTEL traces (W3C `traceparent` propagation) and emit structured JSON
+  logs containing `trace_id` and `span_id` on every log line.
+- **FR-017**: The ingestion service MUST emit a `temperature_readings_ingested_total` counter
+  metric with labels `unit` (`C` or `F`) and `status` (`accepted` or `rejected`), exported
+  to the OTEL Collector.
 
 ### Key Entities
 
@@ -215,6 +234,16 @@ all fields defined.
   `window_end`, `min_value`, `max_value`, `avg_value`, `unit`, `record_count`.
 - **MetricType**: An enumeration extended to include `body_temperature` alongside existing
   types (`blood_pressure`, `spo2`, `activity`).
+
+## Clarifications
+
+### Session 2025-08-25
+
+- Q: For a batch containing mixed valid/invalid temperature readings, which behaviour should the system implement? → A: Partial accept — valid records published to Kafka, invalid records returned with per-record errors, HTTP 207 Multi-Status.
+- Q: Should the ingestion endpoint enforce rate limiting? → A: Yes — per-user limit of 1,000 readings/minute; excess requests return HTTP 429 with a `Retry-After` header.
+- Q: What is the synchronous HTTP response latency target for the ingestion endpoint? → A: 500ms p95 under normal load.
+- Q: Can healthcare providers access the analytics export endpoint with their own credentials? → A: No — export endpoint is user-scoped (own Keycloak JWT only); healthcare provider delegation is out of scope for this story.
+- Q: What observability is required for the new temperature metric paths? → A: Standard OTEL traces + structured logs on all new paths, plus a `temperature_readings_ingested_total` counter metric (labels: unit, status: accepted|rejected).
 
 ## Assumptions
 
@@ -248,7 +277,8 @@ all fields defined.
 
 - **SC-001**: A valid single temperature reading submitted to the ingestion endpoint is
   accepted (HTTP 202) and appears as a queryable record in the time-series store within 5
-  seconds of submission under normal load conditions.
+  seconds of submission under normal load conditions. The ingestion endpoint MUST return its
+  HTTP response (202 or error) within 500ms at the 95th percentile under normal load.
 - **SC-002**: A temperature reading with a value outside the configured physiological range
   is rejected with HTTP 422 and a field-level error message in 100% of test cases.
 - **SC-003**: The temperature chart in the UI renders correctly (no JavaScript errors, no
