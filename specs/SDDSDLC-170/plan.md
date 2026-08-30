@@ -125,15 +125,15 @@ sapphire-kafka-pipeline/               (Kafka Connect JSON)
 
 sapphire-charting-api/                 (Java 17 / Spring Boot)
 └── src/main/java/com/sapphire/charting/
-    ├── temperature/
-    │   ├── TemperatureChartController.java   NEW
-    │   ├── TemperatureChartService.java      NEW
-    │   ├── TemperatureChartRepository.java   NEW
-    │   └── dto/
-    │       ├── TemperatureTrendResponse.java NEW (record)
-    │       └── TemperatureTrendPoint.java    NEW (record)
-    └── config/
-        └── TemperatureProperties.java        NEW (@ConfigurationProperties)
+    └── temperature/
+        ├── TemperatureChartController.java   NEW
+        ├── TemperatureChartService.java      NEW
+        ├── TemperatureChartRepository.java   NEW
+        ├── config/
+        │   └── TemperatureProperties.java    NEW (@ConfigurationProperties)
+        └── dto/
+            ├── TemperatureTrendResponse.java NEW (record)
+            └── TemperatureTrendPoint.java    NEW (record)
 
 sapphire-bff-api/                      (Node.js / Apollo Server)
 └── src/

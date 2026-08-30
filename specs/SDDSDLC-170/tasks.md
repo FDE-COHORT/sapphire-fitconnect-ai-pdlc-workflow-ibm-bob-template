@@ -17,6 +17,7 @@ P3 (Analytics Export + Partner Sharing).
 - `sapphire-charting-api` (Java 17/Spring Boot)
 - `sapphire-bff-api` (Node.js/Apollo Server)
 - `Sapphire` (TypeScript/React)
+- `sapphire-k6-bootstrap` (k6 JS — supporting task T052 only; no dedicated child story)
 
 ## Format: `[ID] [P?] [Story?] Description — repo: file path`
 
@@ -78,7 +79,7 @@ Submit out-of-range value → verify HTTP 422. No UI or chart needed.
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Create `app/models/temperature.py` — Pydantic v2 `TemperatureReadingRequest` model (value: float, unit: Literal["C","F"], timestamp: datetime, device_source: str, ingestion_source: str, measurement_method: Optional[str]) and `TemperatureReadingBatchRequest` model (readings: list[TemperatureReadingRequest], max 100) — repo: `sapphire-event-ingestion-api`
+- [ ] T013 [P] [US1] Create `app/models/temperature.py` — Pydantic v2 `TemperatureReadingRequest` model (value: float, unit: Literal["C","F"], timestamp: datetime, device_source: str, ingestion_source: str, measurement_method: Optional[str]) and `TemperatureReadingBatchRequest` model (readings: list[TemperatureReadingRequest], min 1, max 100 — enforced via `Field(min_length=1, max_length=100)`) — repo: `sapphire-event-ingestion-api`
 - [ ] T014 [P] [US1] Create `app/validators/temperature_validator.py` — `validate_temperature_reading()` function: range check using config values, Fahrenheit-to-Celsius conversion `(F-32)*5/9`, future-timestamp check (≤5 min), returns `value_celsius` and validation errors — repo: `sapphire-event-ingestion-api`
 - [ ] T015 [P] [US1] Create `app/services/rate_limit_service.py` — Redis sliding window counter keyed on `user_id`; raises `RateLimitExceededError` with `retry_after_seconds` when limit exceeded; reads limit from `temperature_config.py` — repo: `sapphire-event-ingestion-api`
 - [ ] T016 [US1] Create `app/routes/temperature.py` — async FastAPI router with `POST /telemetry/body-temperature` (single) and `POST /telemetry/body-temperature/batch` (batch); validates JWT via `Depends(get_current_user)`; calls `rate_limit_service`, `temperature_validator`, Kafka producer; returns HTTP 202 / 207 / 400 / 401 / 422 / 429 / 503 per spec; emits OTEL spans with W3C traceparent; emits `temperature_readings_ingested_total` counter — depends on T013, T014, T015 — repo: `sapphire-event-ingestion-api`
@@ -89,7 +90,7 @@ Submit out-of-range value → verify HTTP 422. No UI or chart needed.
 
 - [ ] T019 [P] [US1] Create `tests/unit/test_temperature_validator.py` — test range check (valid C, valid F, out-of-range C, out-of-range F), unit conversion accuracy, future timestamp rejection, missing required fields — repo: `sapphire-event-ingestion-api`
 - [ ] T020 [P] [US1] Create `tests/unit/test_rate_limit_service.py` — test sliding window counter increment, limit enforcement, retry_after calculation, using Redis mock — repo: `sapphire-event-ingestion-api`
-- [ ] T021 [US1] Create `tests/integration/test_temperature_ingestion.py` — integration tests using `TestClient`: single valid C reading (202), single valid F reading (202 + verify conversion), out-of-range (422), unauthenticated (401), batch mixed-validity (207), empty batch (400), oversized batch (422), rate limit (429), Kafka unavailable (503) — depends on T016 — repo: `sapphire-event-ingestion-api`
+- [ ] T021 [US1] Create `tests/integration/test_temperature_ingestion.py` — integration tests using `TestClient`: single valid C reading (202), single valid F reading (202 + verify conversion), out-of-range (422), unauthenticated (401), batch mixed-validity (207), empty batch (400), oversized batch (422), rate limit (429), Kafka unavailable (503), duplicate submission identical (user_id + device_source + timestamp) returns 202 but does not create a second record (idempotency) — depends on T016 — repo: `sapphire-event-ingestion-api`
 
 **Checkpoint**: User Story 1 complete. Ingestion pipeline functional and tested independently.
 
@@ -109,7 +110,7 @@ chart component. Supports day/week/month ranges, Celsius/Fahrenheit display, loa
 - [ ] T022 [P] [US2] Create `src/main/java/com/sapphire/charting/temperature/dto/TemperatureTrendPoint.java` — Java record: `windowStart` (Instant), `windowEnd` (Instant), `minValue` (double), `maxValue` (double), `avgValue` (double), `recordCount` (long) — repo: `sapphire-charting-api`
 - [ ] T023 [P] [US2] Create `src/main/java/com/sapphire/charting/temperature/dto/TemperatureTrendResponse.java` — Java record: `userId` (String), `range` (String), `unit` (String), `dataPoints` (List\<TemperatureTrendPoint\>) — repo: `sapphire-charting-api`
 - [ ] T024 [P] [US2] Create `src/main/java/com/sapphire/charting/temperature/config/TemperatureProperties.java` — `@ConfigurationProperties(prefix = "temperature")` with `minCelsius`, `maxCelsius` bound from `application.yml` — repo: `sapphire-charting-api`
-- [ ] T025 [US2] Create `src/main/java/com/sapphire/charting/temperature/TemperatureChartRepository.java` — Spring Data JPA repository with custom `@Query` methods querying `temp_hourly_agg`, `temp_daily_agg`, `temp_weekly_agg` views by `userId`, optional `deviceSource`, and time range — repo: `sapphire-charting-api`
+- [ ] T025 [US2] Create `src/main/java/com/sapphire/charting/temperature/TemperatureChartRepository.java` — Spring Data JPA repository with custom `@Query` methods querying `temp_hourly_agg`, `temp_daily_agg`, `temp_weekly_agg` views by `userId`, optional `deviceSource`, and time range; for `range=day`, if `temp_hourly_agg` returns 0 rows (user has < 1h of data), fall back to raw `health_telemetry_body_temperature` records for the current day ordered by `recorded_at` — repo: `sapphire-charting-api`
 - [ ] T026 [US2] Create `src/main/java/com/sapphire/charting/temperature/TemperatureChartService.java` — `@Service`: selects correct aggregate view by `range` param, applies optional `deviceSource` filter, converts values to requested `unit` (C→F: `value * 9/5 + 32`), returns `TemperatureTrendResponse` — depends on T022, T023, T025 — repo: `sapphire-charting-api`
 - [ ] T027 [US2] Create `src/main/java/com/sapphire/charting/temperature/TemperatureChartController.java` — `@RestController` with `GET /users/{userId}/body-temperature/chart` mapping; validates JWT user matches path `userId` (returns 403 if mismatch); returns 404 with `EmptyTrendResponse` if no data; logs with Logback+logstash including `trace_id` and `span_id` — depends on T026 — repo: `sapphire-charting-api`
 - [ ] T028 [P] [US2] Create `src/test/java/com/sapphire/charting/temperature/TemperatureChartControllerTest.java` — `@WebMvcTest` slice: valid week range (200), Fahrenheit conversion (200), no data (404), wrong userId JWT (403), unauthenticated (401) — repo: `sapphire-charting-api`
