@@ -31,11 +31,11 @@ P3 (Analytics Export + Partner Sharing).
 
 **Purpose**: Branch setup and schema/config changes that other tasks depend on.
 
-- [ ] T001 [P] Create feature branch `SDDSDLC-170` in `sapphire-event-ingestion-api`
-- [ ] T002 [P] Create feature branch `SDDSDLC-170` in `sapphire-kafka-pipeline`
-- [ ] T003 [P] Create feature branch `SDDSDLC-170` in `sapphire-charting-api`
-- [ ] T004 [P] Create feature branch `SDDSDLC-170` in `sapphire-bff-api`
-- [ ] T005 [P] Create feature branch `SDDSDLC-170` in `Sapphire`
+- [x] T001 [P] Create feature branch `SDDSDLC-170` in `sapphire-event-ingestion-api`
+- [x] T002 [P] Create feature branch `SDDSDLC-170` in `sapphire-kafka-pipeline`
+- [x] T003 [P] Create feature branch `SDDSDLC-170` in `sapphire-charting-api`
+- [x] T004 [P] Create feature branch `SDDSDLC-170` in `sapphire-bff-api`
+- [x] T005 [P] Create feature branch `SDDSDLC-170` in `Sapphire`
 
 **Checkpoint**: Feature branches created — team can begin parallel work.
 
@@ -48,19 +48,19 @@ MUST be complete before any user story work begins.
 
 ### 2A — Avro Schema Extension (sapphire-event-ingestion-api)
 
-- [ ] T006 Extend `app/schemas/avro/health_telemetry.avsc` — add `BODY_TEMPERATURE` to `MetricType` enum with `"default": "UNKNOWN"` for backward compatibility — repo: `sapphire-event-ingestion-api`
-- [ ] T007 Add `BodyTemperaturePayload` Avro record to `app/schemas/avro/health_telemetry.avsc` with fields: `value_celsius` (double), `original_value` (double), `original_unit` (string), `device_source` (string), `ingestion_source` (string), `measurement_method` (union null/string, default null) — repo: `sapphire-event-ingestion-api`
-- [ ] T008 [P] Write Avro schema evolution compatibility test in `tests/unit/test_avro_schema_evolution.py` — verify old consumers with default enum can deserialise new `BODY_TEMPERATURE` events — repo: `sapphire-event-ingestion-api`
+- [x] T006 Extend `app/schemas/avro/health_telemetry.avsc` — add `BODY_TEMPERATURE` to `MetricType` enum with `"default": "UNKNOWN"` for backward compatibility — repo: `sapphire-event-ingestion-api`
+- [x] T007 Add `BodyTemperaturePayload` Avro record to `app/schemas/avro/health_telemetry.avsc` with fields: `value_celsius` (double), `original_value` (double), `original_unit` (string), `device_source` (string), `ingestion_source` (string), `measurement_method` (union null/string, default null) — repo: `sapphire-event-ingestion-api`
+- [x] T008 [P] Write Avro schema evolution compatibility test in `tests/unit/test_avro_schema_evolution.py` — verify old consumers with default enum can deserialise new `BODY_TEMPERATURE` events — repo: `sapphire-event-ingestion-api`
 
 ### 2B — TimescaleDB Schema (sapphire-kafka-pipeline)
 
-- [ ] T009 Create SQL migration `migrations/V2__body_temperature_hypertable.sql` — creates `health_telemetry_body_temperature` table, unique constraint `(user_id, device_source, recorded_at)`, hypertable declaration, and composite index `(user_id, recorded_at DESC)` — repo: `sapphire-kafka-pipeline`
-- [ ] T010 Create SQL migration `migrations/V3__body_temperature_continuous_aggregates.sql` — defines `temp_hourly_agg` (1h), `temp_daily_agg` (1d), and `temp_weekly_agg` (7d) continuous aggregates with `min_celsius`, `max_celsius`, `avg_celsius`, `record_count` — repo: `sapphire-kafka-pipeline`
-- [ ] T011 Create Kafka Connect sink connector config `connectors/body-temperature-sink.json` — routes `MetricType == BODY_TEMPERATURE` events from `health-telemetry` topic to `health_telemetry_body_temperature` table using SMT field routing — repo: `sapphire-kafka-pipeline`
+- [x] T009 Create SQL migration `migrations/V2__body_temperature_hypertable.sql` — creates `health_telemetry_body_temperature` table, unique constraint `(user_id, device_source, recorded_at)`, hypertable declaration, and composite index `(user_id, recorded_at DESC)` — repo: `sapphire-kafka-pipeline`
+- [x] T010 Create SQL migration `migrations/V3__body_temperature_continuous_aggregates.sql` — defines `temp_hourly_agg` (1h), `temp_daily_agg` (1d), and `temp_weekly_agg` (7d) continuous aggregates with `min_celsius`, `max_celsius`, `avg_celsius`, `record_count` — repo: `sapphire-kafka-pipeline`
+- [x] T011 Create Kafka Connect sink connector config `connectors/body-temperature-sink.json` — routes `MetricType == BODY_TEMPERATURE` events from `health-telemetry` topic to `health_telemetry_body_temperature` table using SMT field routing — repo: `sapphire-kafka-pipeline`
 
 ### 2C — @ConfigurationProperties (sapphire-event-ingestion-api)
 
-- [ ] T012 [P] Create `app/config/temperature_config.py` — Pydantic v2 `BaseSettings` class for `TEMP_MIN_CELSIUS`, `TEMP_MAX_CELSIUS`, `TEMP_MIN_FAHRENHEIT`, `TEMP_MAX_FAHRENHEIT`, `TEMP_BATCH_MAX_SIZE` (default 100), `TEMPERATURE_RATE_LIMIT_PER_USER_PER_MIN` (default 1000) — repo: `sapphire-event-ingestion-api`
+- [x] T012 [P] Create `app/config/temperature_config.py` — Pydantic v2 `BaseSettings` class for `TEMP_MIN_CELSIUS`, `TEMP_MAX_CELSIUS`, `TEMP_MIN_FAHRENHEIT`, `TEMP_MAX_FAHRENHEIT`, `TEMP_BATCH_MAX_SIZE` (default 100), `TEMPERATURE_RATE_LIMIT_PER_USER_PER_MIN` (default 1000) — repo: `sapphire-event-ingestion-api`
 
 **Checkpoint**: Foundation ready — ingestion schema, DB schema, and config in place. User story work can begin.
 
@@ -79,18 +79,18 @@ Submit out-of-range value → verify HTTP 422. No UI or chart needed.
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] Create `app/models/temperature.py` — Pydantic v2 `TemperatureReadingRequest` model (value: float, unit: Literal["C","F"], timestamp: datetime, device_source: str, ingestion_source: str, measurement_method: Optional[str]) and `TemperatureReadingBatchRequest` model (readings: list[TemperatureReadingRequest], min 1, max 100 — enforced via `Field(min_length=1, max_length=100)`) — repo: `sapphire-event-ingestion-api`
-- [ ] T014 [P] [US1] Create `app/validators/temperature_validator.py` — `validate_temperature_reading()` function: range check using config values, Fahrenheit-to-Celsius conversion `(F-32)*5/9`, future-timestamp check (≤5 min), returns `value_celsius` and validation errors — repo: `sapphire-event-ingestion-api`
-- [ ] T015 [P] [US1] Create `app/services/rate_limit_service.py` — Redis sliding window counter keyed on `user_id`; raises `RateLimitExceededError` with `retry_after_seconds` when limit exceeded; reads limit from `temperature_config.py` — repo: `sapphire-event-ingestion-api`
-- [ ] T016 [US1] Create `app/routes/temperature.py` — async FastAPI router with `POST /telemetry/body-temperature` (single) and `POST /telemetry/body-temperature/batch` (batch); validates JWT via `Depends(get_current_user)`; calls `rate_limit_service`, `temperature_validator`, Kafka producer; returns HTTP 202 / 207 / 400 / 401 / 422 / 429 / 503 per spec; emits OTEL spans with W3C traceparent; emits `temperature_readings_ingested_total` counter — depends on T013, T014, T015 — repo: `sapphire-event-ingestion-api`
-- [ ] T017 [US1] Register temperature router in `app/main.py` — `app.include_router(temperature_router, prefix="/telemetry")` — repo: `sapphire-event-ingestion-api`
-- [ ] T018 [P] [US1] Add structlog fields to all new handlers: `temperature_validator.py` and `temperature.py` route — ensure every log line includes `trace_id` and `span_id` from OTEL context — repo: `sapphire-event-ingestion-api`
+- [x] T013 [P] [US1] Create `app/models/temperature.py` — Pydantic v2 `TemperatureReadingRequest` model (value: float, unit: Literal["C","F"], timestamp: datetime, device_source: str, ingestion_source: str, measurement_method: Optional[str]) and `TemperatureReadingBatchRequest` model (readings: list[TemperatureReadingRequest], min 1, max 100 — enforced via `Field(min_length=1, max_length=100)`) — repo: `sapphire-event-ingestion-api`
+- [x] T014 [P] [US1] Create `app/validators/temperature_validator.py` — `validate_temperature_reading()` function: range check using config values, Fahrenheit-to-Celsius conversion `(F-32)*5/9`, future-timestamp check (≤5 min), returns `value_celsius` and validation errors — repo: `sapphire-event-ingestion-api`
+- [x] T015 [P] [US1] Create `app/services/rate_limit_service.py` — Redis sliding window counter keyed on `user_id`; raises `RateLimitExceededError` with `retry_after_seconds` when limit exceeded; reads limit from `temperature_config.py` — repo: `sapphire-event-ingestion-api`
+- [x] T016 [US1] Create `app/routes/temperature.py` — async FastAPI router with `POST /telemetry/body-temperature` (single) and `POST /telemetry/body-temperature/batch` (batch); validates JWT via `Depends(get_current_user)`; calls `rate_limit_service`, `temperature_validator`, Kafka producer; returns HTTP 202 / 207 / 400 / 401 / 422 / 429 / 503 per spec; emits OTEL spans with W3C traceparent; emits `temperature_readings_ingested_total` counter — depends on T013, T014, T015 — repo: `sapphire-event-ingestion-api`
+- [x] T017 [US1] Register temperature router in `app/main.py` — `app.include_router(temperature_router, prefix="/telemetry")` — repo: `sapphire-event-ingestion-api`
+- [x] T018 [P] [US1] Add structlog fields to all new handlers: `temperature_validator.py` and `temperature.py` route — ensure every log line includes `trace_id` and `span_id` from OTEL context — repo: `sapphire-event-ingestion-api`
 
 ### Tests for User Story 1
 
-- [ ] T019 [P] [US1] Create `tests/unit/test_temperature_validator.py` — test range check (valid C, valid F, out-of-range C, out-of-range F), unit conversion accuracy, future timestamp rejection, missing required fields — repo: `sapphire-event-ingestion-api`
-- [ ] T020 [P] [US1] Create `tests/unit/test_rate_limit_service.py` — test sliding window counter increment, limit enforcement, retry_after calculation, using Redis mock — repo: `sapphire-event-ingestion-api`
-- [ ] T021 [US1] Create `tests/integration/test_temperature_ingestion.py` — integration tests using `TestClient`: single valid C reading (202), single valid F reading (202 + verify conversion), out-of-range (422), unauthenticated (401), batch mixed-validity (207), empty batch (400), oversized batch (422), rate limit (429), Kafka unavailable (503), duplicate submission identical (user_id + device_source + timestamp) returns 202 but does not create a second record (idempotency) — depends on T016 — repo: `sapphire-event-ingestion-api`
+- [x] T019 [P] [US1] Create `tests/unit/test_temperature_validator.py` — test range check (valid C, valid F, out-of-range C, out-of-range F), unit conversion accuracy, future timestamp rejection, missing required fields — repo: `sapphire-event-ingestion-api`
+- [x] T020 [P] [US1] Create `tests/unit/test_rate_limit_service.py` — test sliding window counter increment, limit enforcement, retry_after calculation, using Redis mock — repo: `sapphire-event-ingestion-api`
+- [x] T021 [US1] Create `tests/integration/test_temperature_ingestion.py` — integration tests using `TestClient`: single valid C reading (202), single valid F reading (202 + verify conversion), out-of-range (422), unauthenticated (401), batch mixed-validity (207), empty batch (400), oversized batch (422), rate limit (429), Kafka unavailable (503), duplicate submission identical (user_id + device_source + timestamp) returns 202 but does not create a second record (idempotency) — depends on T016 — repo: `sapphire-event-ingestion-api`
 
 **Checkpoint**: User Story 1 complete. Ingestion pipeline functional and tested independently.
 
@@ -107,14 +107,14 @@ chart component. Supports day/week/month ranges, Celsius/Fahrenheit display, loa
 
 ### 4A — Charting API (sapphire-charting-api)
 
-- [ ] T022 [P] [US2] Create `src/main/java/com/sapphire/charting/temperature/dto/TemperatureTrendPoint.java` — Java record: `windowStart` (Instant), `windowEnd` (Instant), `minValue` (double), `maxValue` (double), `avgValue` (double), `recordCount` (long) — repo: `sapphire-charting-api`
-- [ ] T023 [P] [US2] Create `src/main/java/com/sapphire/charting/temperature/dto/TemperatureTrendResponse.java` — Java record: `userId` (String), `range` (String), `unit` (String), `dataPoints` (List\<TemperatureTrendPoint\>) — repo: `sapphire-charting-api`
-- [ ] T024 [P] [US2] Create `src/main/java/com/sapphire/charting/temperature/config/TemperatureProperties.java` — `@ConfigurationProperties(prefix = "temperature")` with `minCelsius`, `maxCelsius` bound from `application.yml` — repo: `sapphire-charting-api`
-- [ ] T025 [US2] Create `src/main/java/com/sapphire/charting/temperature/TemperatureChartRepository.java` — Spring Data JPA repository with custom `@Query` methods querying `temp_hourly_agg`, `temp_daily_agg`, `temp_weekly_agg` views by `userId`, optional `deviceSource`, and time range; for `range=day`, if `temp_hourly_agg` returns 0 rows (user has < 1h of data), fall back to raw `health_telemetry_body_temperature` records for the current day ordered by `recorded_at` — repo: `sapphire-charting-api`
-- [ ] T026 [US2] Create `src/main/java/com/sapphire/charting/temperature/TemperatureChartService.java` — `@Service`: selects correct aggregate view by `range` param, applies optional `deviceSource` filter, converts values to requested `unit` (C→F: `value * 9/5 + 32`), returns `TemperatureTrendResponse` — depends on T022, T023, T025 — repo: `sapphire-charting-api`
-- [ ] T027 [US2] Create `src/main/java/com/sapphire/charting/temperature/TemperatureChartController.java` — `@RestController` with `GET /users/{userId}/body-temperature/chart` mapping; validates JWT user matches path `userId` (returns 403 if mismatch); returns 404 with `EmptyTrendResponse` if no data; logs with Logback+logstash including `trace_id` and `span_id` — depends on T026 — repo: `sapphire-charting-api`
-- [ ] T028 [P] [US2] Create `src/test/java/com/sapphire/charting/temperature/TemperatureChartControllerTest.java` — `@WebMvcTest` slice: valid week range (200), Fahrenheit conversion (200), no data (404), wrong userId JWT (403), unauthenticated (401) — repo: `sapphire-charting-api`
-- [ ] T029 [P] [US2] Create `src/test/java/com/sapphire/charting/temperature/TemperatureChartServiceTest.java` — JUnit 5 + Mockito: unit test range→view routing logic, C→F conversion accuracy, empty result handling — repo: `sapphire-charting-api`
+- [x] T022 [P] [US2] Create `src/main/java/com/health/charting/temperature/dto/TemperatureTrendPoint.java` — Java record: `windowStart` (Instant), `windowEnd` (Instant), `minValue` (double), `maxValue` (double), `avgValue` (double), `recordCount` (long) — repo: `sapphire-charting-api`
+- [x] T023 [P] [US2] Create `src/main/java/com/health/charting/temperature/dto/TemperatureTrendResponse.java` — Java record: `userId` (String), `range` (String), `unit` (String), `dataPoints` (List\<TemperatureTrendPoint\>) — repo: `sapphire-charting-api`
+- [x] T024 [P] [US2] Create `src/main/java/com/health/charting/temperature/config/TemperatureProperties.java` — `@ConfigurationProperties(prefix = "temperature")` with `minCelsius`, `maxCelsius` bound from `application.yml` — repo: `sapphire-charting-api`
+- [x] T025 [US2] Create `src/main/java/com/health/charting/temperature/TemperatureChartRepository.java` — JDBC repository using `NamedParameterJdbcTemplate` querying `temp_hourly_agg`, `temp_daily_agg`, `temp_weekly_agg` views by `userId`, optional `deviceSource`, and time range; for `range=day`, if `temp_hourly_agg` returns 0 rows (user has < 1h of data), fall back to raw `health_telemetry_body_temperature` records for the current day ordered by `recorded_at`; implements `TemperatureChartRepositoryPort` interface — repo: `sapphire-charting-api`
+- [x] T026 [US2] Create `src/main/java/com/health/charting/temperature/TemperatureChartService.java` — `@Service`: selects correct aggregate view by `range` param, applies optional `deviceSource` filter, converts values to requested `unit` (C→F: `value * 9/5 + 32`), returns `TemperatureTrendResponse` — depends on T022, T023, T025 — repo: `sapphire-charting-api`
+- [x] T027 [US2] Create `src/main/java/com/health/charting/temperature/TemperatureChartController.java` — `@RestController` with `GET /users/{userId}/body-temperature/chart` mapping; validates JWT user matches path `userId` (returns 403 if mismatch); returns 404 with `EmptyTrendResponse` if no data; logs with Logback+logstash including `trace_id` and `span_id` — depends on T026 — repo: `sapphire-charting-api`
+- [x] T028 [P] [US2] Create `src/test/java/com/health/charting/temperature/TemperatureChartControllerTest.java` — `@WebMvcTest` slice: valid week range (200), Fahrenheit conversion (200), no data (404), wrong userId JWT (403), unauthenticated (401) — repo: `sapphire-charting-api`
+- [x] T029 [P] [US2] Create `src/test/java/com/health/charting/temperature/TemperatureChartServiceTest.java` — JUnit 5 + Mockito: unit test range→view routing logic, C→F conversion accuracy, empty result handling — repo: `sapphire-charting-api`
 
 ### 4B — BFF GraphQL (sapphire-bff-api)
 
