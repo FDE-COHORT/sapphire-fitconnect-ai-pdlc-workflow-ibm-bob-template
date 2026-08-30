@@ -61,3 +61,59 @@
 - Workflow state: `PHASE_3C_PENDING`
 
 ---
+
+## Observation — plan phase — 2025-08-25T00:00:00Z
+
+### Task
+- **Phase**: speckit-plan (SDDSDLC-170)
+- **Note**: This plan phase runs in the same Bob session as speckit-specify and speckit-clarify. Token metrics are cumulative for the full session and recorded in the specify phase entry above. No separate task record found in the DB for this phase.
+
+### Artifacts Generated
+- `specs/SDDSDLC-170/plan.md` — Implementation plan (18-gate Constitution Check ✅)
+- `specs/SDDSDLC-170/research.md` — 6 research decisions resolved
+- `specs/SDDSDLC-170/data-model.md` — TimescaleDB schema, Avro event, response DTOs
+- `specs/SDDSDLC-170/contracts/ingestion-api.yaml` — OpenAPI ingestion contract
+- `specs/SDDSDLC-170/contracts/charting-api.yaml` — OpenAPI charting contract
+- `specs/SDDSDLC-170/contracts/bff-graphql-schema.graphql` — GraphQL schema extension
+- `specs/SDDSDLC-170/quickstart.md` — 8-step E2E validation guide
+
+### Child Stories Created
+| Repo | Child Story | Link |
+|------|------------|------|
+| sapphire-event-ingestion-api | SDDSDLC-190 | LINKED ✅ |
+| sapphire-kafka-pipeline | SDDSDLC-193 | LINKED ✅ |
+| sapphire-charting-api | SDDSDLC-189 | LINKED ✅ |
+| sapphire-bff-api | SDDSDLC-191 | LINKED ✅ |
+| Sapphire | SDDSDLC-192 | LINKED ✅ |
+
+### Outcome
+- Plan PR [#2](https://github.com/FDE-COHORT/sapphire-fitconnect-ai-pdlc-workflow-ibm-bob-template/pull/2) raised and merged ✅
+- Workflow state: `PHASE_6_PENDING`
+
+---
+
+## Observation — tasks phase — 2025-08-25T00:00:00Z
+
+### Task
+- **Phase**: speckit-tasks (SDDSDLC-170)
+- **Note**: Runs in the same Bob session as specify/clarify/plan phases. Token metrics cumulative — recorded in the specify phase entry. No separate DB record for this phase.
+
+### Artifact Generated
+- `specs/SDDSDLC-170/tasks.md` — 52 tasks across 5 repos and 3 user stories
+
+### Task Breakdown
+| Phase | Scope | Tasks |
+|-------|-------|-------|
+| Phase 1 — Setup | Branch creation (5 repos) | 5 |
+| Phase 2 — Foundational | Avro schema, TimescaleDB, Python config | 7 |
+| Phase 3 — US1 (P1) | Ingestion (sapphire-event-ingestion-api) | 9 |
+| Phase 4 — US2 (P2) | Charts (charting-api + bff-api + Sapphire) | 19 |
+| Phase 5 — US3 (P3) | Export + docs (charting-api + bff-api) | 5 |
+| Phase 6 — Polish | Observability, coverage, E2E | 7 |
+| **Total** | | **52** |
+
+### Outcome
+- Workflow state: `PHASE_7_PENDING`
+- Pushed to `origin/SDDSDLC-170` (commit `0a5fc99`)
+
+---
