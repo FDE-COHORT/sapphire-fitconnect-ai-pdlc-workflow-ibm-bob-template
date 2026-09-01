@@ -118,23 +118,48 @@
 
 ---
 
-## Observation — speckit-implement — 2025-08-25T00:00:00Z
+## Observation — db66d7ed26556192de055e70f4cb3de0 — 2026-08-29T00:00:00Z
 
 ### Task
-- **Phase**: speckit-implement (SDDSDLC-170) — REPO=sapphire-bff-api PHASE="Phase 4: User Story 2 — View Body Temperature Trend Charts (Priority: P2)"
-- **Task ID**: N/A (task in-flight at time of record)
+- **Task ID**: `db66d7ed26556192de055e70f4cb3de0`
 - **Jira Story**: SDDSDLC-170 / Child: SDDSDLC-191
+- **Workflow phase**: speckit-implement / sapphire-bff-api / Phase 4: User Story 2 — View Body Temperature Trend Charts (Priority: P2)
 
 ### Token Usage
 | Metric | Value |
 |---|---|
-| Input tokens | N/A |
-| Output tokens | N/A |
-| Cache read | N/A |
-| Cache write | N/A |
-| Cache hit rate | N/A |
-| Context tokens (reported) | N/A |
-| **Total cost (USD)** | **N/A** |
+| Input tokens | 40,050,631 |
+| Output tokens | 132,123 |
+| Cache read | 39,062,035 |
+| Cache write | 961,704 |
+| Cache hit rate | 97.5% |
+| Context tokens (reported) | 66,192 |
+| **Total cost (USD)** | **$80.457482** |
+
+### Context Window Breakdown
+| Section | Tokens | % of computed total |
+|---|---|---|
+| MCP tool definitions | N/A | N/A |
+| Skills | N/A | N/A |
+| Tool system prompts | N/A | N/A |
+| Tool definitions | N/A | N/A |
+| Project rules | N/A | N/A |
+| Static sections | N/A | N/A |
+| Custom instructions | N/A | N/A |
+| Base rules | N/A | N/A |
+| Environment | N/A | N/A |
+| Role definition | N/A | N/A |
+| **Total (computed)** | **N/A** | 100% |
+
+### Loaded Skills
+| Skill | Tokens |
+|---|---|
+| speckit-implement | N/A |
+
+### Observations
+- Cache hit rate: 97.5% — high efficiency
+- Largest context consumer: N/A (contextWindowBreakdown not available for this task)
+- Output/input ratio: 0.33% — analysis/read-heavy
 
 ### Artifacts Produced
 | File | Action |
@@ -351,5 +376,57 @@ All Phase 5 tasks for User Story 3 are now complete across all three repos:
 - Phase: `/speckit-implement SDDSDLC-170 REPO=sapphire-bff-api PHASE="Phase 4: User Story 2 — View Body Temperature Trend Charts (Priority: P2)"` (continued session — all Phase 6 polish tasks completed)
 - All 19 impl-queue entries are now `[x]`. Phase 8C: Implement marked complete. CURRENT_STAGE set to CHECKPOINT_4_PENDING.
 - DB query returned no match (resumed conversation, not a new task session).
+
+---
+
+## Observation — db16106d07dfbc99c46c61a8316c5225 — 2026-09-01T00:23:44Z
+
+### Task
+- **Task ID**: `db16106d07dfbc99c46c61a8316c5225`
+- **Jira Story**: SDDSDLC-170
+
+### Token Usage
+| Metric | Value |
+|---|---|
+| Input tokens | 19,051 |
+| Output tokens | 1,048 |
+| Cache read | 0 |
+| Cache write | 0 |
+| Cache hit rate | 0.0% |
+| Context tokens (reported) | 20,099 |
+| **Total cost (USD)** | **$0.040198** |
+
+### Context Window Breakdown
+| Section | Tokens | % of computed total |
+|---|---|---|
+| MCP tool definitions | N/A | N/A |
+| Skills | N/A | N/A |
+| Tool system prompts | N/A | N/A |
+| Tool definitions | N/A | N/A |
+| Project rules | N/A | N/A |
+| Static sections | N/A | N/A |
+| Custom instructions | N/A | N/A |
+| Base rules | N/A | N/A |
+| Environment | N/A | N/A |
+| Role definition | N/A | N/A |
+| **Total (computed)** | **N/A** | 100% |
+
+### Loaded Skills
+| Skill | Tokens |
+|---|---|
+| speckit-ship | N/A |
+| observe-workflow | N/A |
+
+### MCP Servers
+| Server | Tool count |
+|---|---|
+| git | N/A |
+| context7 | N/A |
+| codegraph | N/A |
+
+### Observations
+- Cache hit rate: 0.0% — low — consider cache warm-up
+- Largest context consumer: N/A (contextWindowBreakdown not available for this task)
+- Output/input ratio: 5.5% — generation-heavy
 
 ---
