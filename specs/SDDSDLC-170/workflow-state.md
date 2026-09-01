@@ -4,10 +4,10 @@
 - Story ID: SDDSDLC-170
 - Story Title: Add Support for Body Temperature Metric Ingestion, Storage, and Reporting
 - Started: 2025-08-25
-- Last Updated: 2025-08-25
+- Last Updated: 2025-09-01
 
 ## CURRENT_STAGE
-CHECKPOINT_4_PENDING
+COMPLETE
 
 ## Completed Phases
 - [x] Phase 1: Constitution Verified
@@ -35,10 +35,10 @@ CHECKPOINT_4_PENDING
 - [x] Phase 8A: Implementation Entry Gates
 - [x] Phase 8B: Generate Implementation Queue
 - [x] Phase 8C: Implement
-- [ ] Phase 8D: Jira Stories Updated
-- [ ] CHECKPOINT 4: Validation Complete
-- [ ] Phase 9: Raise PRs
-- [ ] CHECKPOINT 5: PRs Created
+- [x] Phase 8D: Jira Stories Updated
+- [x] CHECKPOINT 4: Validation Complete
+- [x] Phase 9: Raise PRs
+- [x] CHECKPOINT 5: PRs Created
 
 ## Key Data
 - Spec PR: https://github.com/FDE-COHORT/sapphire-fitconnect-ai-pdlc-workflow-ibm-bob-template/pull/1
@@ -47,7 +47,13 @@ CHECKPOINT_4_PENDING
 - Plan Approval (`fde`): MERGED 2026-08-30
 - Tasks PR: https://github.com/FDE-COHORT/sapphire-fitconnect-ai-pdlc-workflow-ibm-bob-template/pull/3
 - Tasks Approval (`fde`): MERGED by shantaramvernekar 2026-08-30T13:50:26Z
-- Implementation PRs: (pending)
+- Implementation PRs:
+  - sapphire-event-ingestion-api (SDDSDLC-190): https://github.com/FDE-COHORT/sapphire-event-ingestion-api/pull/1
+  - sapphire-kafka-pipeline (SDDSDLC-193): https://github.com/FDE-COHORT/sapphire-kafka-pipeline/pull/1
+  - sapphire-charting-api (SDDSDLC-189): https://github.com/FDE-COHORT/sapphire-charting-api/pull/1
+  - sapphire-bff-api (SDDSDLC-191): https://github.com/FDE-COHORT/sapphire-bff-api/pull/1
+  - Sapphire (SDDSDLC-192): https://github.com/FDE-COHORT/Sapphire/pull/1
+  - Orchestrator (SDDSDLC-170): https://github.com/FDE-COHORT/sapphire-fitconnect-ai-pdlc-workflow-ibm-bob-template/pull/4
 
 ## Child Stories
 sapphire-event-ingestion-api: SDDSDLC-190
