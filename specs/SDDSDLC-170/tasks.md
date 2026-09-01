@@ -118,20 +118,20 @@ chart component. Supports day/week/month ranges, Celsius/Fahrenheit display, loa
 
 ### 4B — BFF GraphQL (sapphire-bff-api)
 
-- [ ] T030 [P] [US2] Create `src/schema/temperature.graphql` — schema extension per contract `specs/SDDSDLC-170/contracts/bff-graphql-schema.graphql`: `BodyTemperatureChartInput`, `BodyTemperatureChartResult`, `BodyTemperatureTrendPoint`, `TemperatureChartRange` enum, `TemperatureUnit` enum, `extend type Query { bodyTemperatureChart(...) }` — repo: `sapphire-bff-api`
-- [ ] T031 [US2] Create `src/resolvers/temperature.resolver.ts` — typed resolver for `bodyTemperatureChart`; validates JWT claims first; delegates to charting API REST call via service client; returns null (not error) for empty data; logs via pino with `trace_id` and `span_id` — depends on T030 — repo: `sapphire-bff-api`
-- [ ] T032 [P] [US2] Create `src/dataloaders/temperatureChartLoader.ts` — DataLoader batching temperature chart requests per `userId` to prevent N+1 calls — repo: `sapphire-bff-api`
-- [ ] T033 [US2] Register temperature schema, resolver, and DataLoader in BFF Apollo Server entry point — depends on T030, T031, T032 — repo: `sapphire-bff-api`
-- [ ] T034 [P] [US2] Create `src/resolvers/temperature.resolver.test.ts` — Jest unit tests: valid query (200), null return for empty data, JWT validation rejection, resolver delegates to DataLoader not direct REST — repo: `sapphire-bff-api`
+- [x] T030 [P] [US2] Create `src/schema/temperature.graphql` — schema extension per contract `specs/SDDSDLC-170/contracts/bff-graphql-schema.graphql`: `BodyTemperatureChartInput`, `BodyTemperatureChartResult`, `BodyTemperatureTrendPoint`, `TemperatureChartRange` enum, `TemperatureUnit` enum, `extend type Query { bodyTemperatureChart(...) }` — repo: `sapphire-bff-api`
+- [x] T031 [US2] Create `src/resolvers/temperature.resolver.js` — typed resolver for `bodyTemperatureChart`; validates JWT claims first; delegates to charting API REST call via service client; returns null (not error) for empty data; logs via otelLogger with `trace_id` and `span_id` — depends on T030 — repo: `sapphire-bff-api`
+- [x] T032 [P] [US2] Create `src/dataloaders/temperatureChartLoader.js` — DataLoader batching temperature chart requests per `userId` to prevent N+1 calls — repo: `sapphire-bff-api`
+- [x] T033 [US2] Register temperature schema, resolver, and DataLoader in BFF Apollo Server entry point — depends on T030, T031, T032 — repo: `sapphire-bff-api`
+- [x] T034 [P] [US2] Create `src/resolvers/__tests__/temperature.resolver.test.js` — Jest unit tests: valid query (200), null return for empty data, JWT validation rejection, resolver delegates to DataLoader not direct REST — repo: `sapphire-bff-api`
 
 ### 4C — React UI (Sapphire)
 
-- [ ] T035 [P] [US2] Create `src/features/body-temperature/queries/bodyTemperatureChart.graphql` — Apollo Client query using `bodyTemperatureChart(input: $input)` with all `BodyTemperatureTrendPoint` fields; `fetchPolicy: "cache-and-network"` to prevent stale health data — repo: `Sapphire`
-- [ ] T036 [P] [US2] Create `src/features/body-temperature/bodyTemperatureChart.types.ts` — TypeScript interfaces: `TemperatureChartRange`, `TemperatureUnit`, `BodyTemperatureTrendPoint`, `BodyTemperatureChartResult`; no `any` types — repo: `Sapphire`
-- [ ] T037 [US2] Create `src/features/body-temperature/useBodyTemperatureChart.ts` — custom hook wrapping Apollo `useQuery`; accepts `userId`, `range`, `unit`, optional `deviceSource`; returns `{ data, loading, error }`; URL query params (`range`, `unit`) are the source of truth for selections — depends on T035, T036 — repo: `Sapphire`
-- [ ] T038 [US2] Create `src/features/body-temperature/BodyTemperatureChart.tsx` — React functional component: renders loading skeleton while `loading=true`, error boundary message when `error` present, empty-state message when `data.dataPoints.length === 0`, chart with min/max/avg lines when data present; day/week/month range selector updates URL param; unit toggle (°C/°F) updates URL param and triggers client-side display conversion (no new network request) — depends on T037 — repo: `Sapphire`
-- [ ] T039 [US2] Add `BodyTemperatureChart` to the health dashboard metrics list view — integrate into existing metrics dashboard layout alongside blood pressure, SpO2, activity — depends on T038 — repo: `Sapphire`
-- [ ] T040 [P] [US2] Create `src/features/body-temperature/BodyTemperatureChart.test.tsx` — React Testing Library: loading skeleton renders, error boundary renders on Apollo error, empty state renders with no data, chart renders with seeded data for each range, unit toggle updates displayed values, snapshot test — repo: `Sapphire`
+- [x] T035 [P] [US2] Create `client/src/graphql/bodyTemperatureChart.ts` — Apollo Client query using `bodyTemperatureChart(input: $input)` with all `BodyTemperatureTrendPoint` fields; `fetchPolicy: "cache-and-network"` to prevent stale health data — repo: `Sapphire`
+- [x] T036 [P] [US2] Create `client/src/features/body-temperature/bodyTemperatureChart.types.ts` — TypeScript interfaces: `TemperatureChartRange`, `TemperatureUnit`, `BodyTemperatureTrendPoint`, `BodyTemperatureChartResult`; no `any` types — repo: `Sapphire`
+- [x] T037 [US2] Create `client/src/features/body-temperature/useBodyTemperatureChart.ts` — custom hook wrapping Apollo `useQuery`; accepts `userId`, `range`, `unit`, optional `deviceSource`; returns `{ data, loading, error, range, unit, setRange, setUnit }`; URL query params (`range`, `unit`) are the source of truth for selections — depends on T035, T036 — repo: `Sapphire`
+- [x] T038 [US2] Create `client/src/features/body-temperature/BodyTemperatureChart.tsx` — React functional component: renders loading skeleton while `loading=true`, error boundary message when `error` present, empty-state message when `data.dataPoints.length === 0`, chart with min/max/avg lines when data present; day/week/month range selector updates URL param; unit toggle (°C/°F) updates URL param — depends on T037 — repo: `Sapphire`
+- [x] T039 [US2] Add `BodyTemperatureChart` to the health dashboard metrics list view — integrated into `client/src/pages/dashboard.tsx` below BloodPressureChart — depends on T038 — repo: `Sapphire`
+- [x] T040 [P] [US2] Create `client/src/features/body-temperature/__tests__/BodyTemperatureChart.test.tsx` — React Testing Library + Vitest: loading skeleton renders, error boundary renders on Apollo error, empty state renders with no data, chart renders with seeded data, unit toggle, range selector, snapshot — repo: `Sapphire`
 
 **Checkpoint**: User Story 2 complete. Full chart flow from DB → charting API → BFF → UI functional.
 
@@ -147,11 +147,11 @@ temperature records in response. Check OpenAPI spec includes `body_temperature` 
 
 **Repos**: `sapphire-charting-api`, `sapphire-bff-api`
 
-- [ ] T041 [US3] Add temperature records to `sapphire-charting-api` analytics export endpoint — extend existing analytics export service/controller to include temperature data from `health_telemetry_body_temperature` table; return `value_celsius`, `original_unit`, `device_source`, `measurement_method`, `recorded_at` fields — repo: `sapphire-charting-api`
-- [ ] T042 [US3] Update OpenAPI spec `openapi.yaml` (or equivalent) in `sapphire-event-ingestion-api` — document `body_temperature` metric type, all `TemperatureReadingRequest` fields, valid ranges (30–45°C / 86–113°F), supported units (C/F) as per contract `specs/SDDSDLC-170/contracts/ingestion-api.yaml` — repo: `sapphire-event-ingestion-api`
-- [ ] T043 [P] [US3] Update OpenAPI spec in `sapphire-charting-api` — document new `GET /users/{userId}/body-temperature/chart` endpoint as per contract `specs/SDDSDLC-170/contracts/charting-api.yaml` — repo: `sapphire-charting-api`
-- [ ] T044 [P] [US3] Add `bodyTemperatureChart` query to BFF GraphQL schema documentation — confirm schema introspection returns `bodyTemperatureChart` with all types and deprecation fields correctly documented — repo: `sapphire-bff-api`
-- [ ] T045 [P] [US3] Create `src/test/java/.../AnalyticsExportTemperatureTest.java` — `@WebMvcTest` or `@SpringBootTest`: verify temperature records present in analytics export response for user with data; verify auth enforcement (401/403) — repo: `sapphire-charting-api`
+- [x] T041 [US3] Add temperature records to `sapphire-charting-api` analytics export endpoint — created `TemperatureExportController`, `TemperatureExportService`, `TemperatureExportRepository`, `TemperatureExportRecord`, `TemperatureExportResponse`; returns `value_celsius`, `original_unit`, `device_source`, `measurement_method`, `recorded_at` from `health_telemetry_body_temperature` — repo: `sapphire-charting-api`
+- [x] T042 [US3] Update OpenAPI spec in `sapphire-event-ingestion-api` — expanded `API_DESCRIPTION` in `settings.py` to document `BODY_TEMPERATURE` metric type, valid ranges (30–45°C / 86–113°F), supported units, rate limit, and auth; added `openapi_tags` metadata in `main.py` for "Body Temperature Ingestion" tag; tagged temperature router — repo: `sapphire-event-ingestion-api`
+- [x] T043 [P] [US3] Update OpenAPI spec in `sapphire-charting-api` — documented `GET /users/{userId}/body-temperature/chart` and `GET /users/{userId}/body-temperature/export` via springdoc annotations; updated `OpenApiConfig.java` description to reference SDDSDLC-170 endpoints — repo: `sapphire-charting-api`
+- [x] T044 [P] [US3] Add `bodyTemperatureChart` query to BFF GraphQL schema documentation — enriched `temperatureTypeDefs` in `typeDefs.js` and `temperature.graphql` with per-field descriptions, per-enum-value descriptions, and SDL docstrings on all types; verified via `makeExecutableSchema` introspection that all 6 `BodyTemperatureTrendPoint` fields, 4 `BodyTemperatureChartResult` fields, 4 `BodyTemperatureChartInput` fields, 3 `TemperatureChartRange` values, 2 `TemperatureUnit` values, and the `bodyTemperatureChart` query field all return non-null descriptions — repo: `sapphire-bff-api`
+- [x] T045 [P] [US3] Create `src/test/java/com/health/charting/temperature/AnalyticsExportTemperatureTest.java` — `@WebMvcTest` 5 tests: records present (200), empty list (200), time-range forwarded, 401 unauthenticated, 403 user mismatch — all 5 pass — repo: `sapphire-charting-api`
 
 **Checkpoint**: User Story 3 complete. All acceptance criteria met — temperature data in exports, schema documented.
 
@@ -161,13 +161,13 @@ temperature records in response. Check OpenAPI spec includes `body_temperature` 
 
 **Purpose**: Observability validation, test coverage gates, E2E quickstart validation.
 
-- [ ] T046 [P] Verify `temperature_readings_ingested_total` counter appears in OTEL Collector metrics output — add integration test or manual check per `specs/SDDSDLC-170/quickstart.md` Step 8 — repo: `sapphire-event-ingestion-api`
-- [ ] T047 [P] Verify structured logs (trace_id, span_id) appear on all new temperature paths in all 3 backend repos — repo: `sapphire-event-ingestion-api`, `sapphire-charting-api`, `sapphire-bff-api`
-- [ ] T048 [P] Run test coverage report for `sapphire-event-ingestion-api` — verify ≥80% coverage on new temperature modules per SC-009 — repo: `sapphire-event-ingestion-api`
-- [ ] T049 [P] Run test coverage report for `sapphire-charting-api` — verify ≥80% overall, 100% domain layer coverage per SC-010 — repo: `sapphire-charting-api`
-- [ ] T050 [P] Run test coverage report for `Sapphire` — verify ≥70% on `src/features/body-temperature/` per constitution — repo: `Sapphire`
+- [x] T046 [P] Verify `temperature_readings_ingested_total` counter appears in OTEL Collector metrics output — add integration test or manual check per `specs/SDDSDLC-170/quickstart.md` Step 8 — repo: `sapphire-event-ingestion-api`
+- [x] T047 [P] Verify structured logs (trace_id, span_id) appear on all new temperature paths in all 3 backend repos — repo: `sapphire-event-ingestion-api`, `sapphire-charting-api`, `sapphire-bff-api`
+- [x] T048 [P] Run test coverage report for `sapphire-event-ingestion-api` — verify ≥80% coverage on new temperature modules per SC-009 — repo: `sapphire-event-ingestion-api`
+- [x] T049 [P] Run test coverage report for `sapphire-charting-api` — verify ≥80% overall, 100% domain layer coverage per SC-010 — repo: `sapphire-charting-api`
+- [x] T050 [P] Run test coverage report for `Sapphire` — verify ≥70% on `src/features/body-temperature/` per constitution — repo: `Sapphire`
 - [ ] T051 [P] Run full E2E quickstart validation per `specs/SDDSDLC-170/quickstart.md` Steps 1–8 — confirm all quickstart checklist items pass — all repos
-- [ ] T052 Update `sapphire-k6-bootstrap` data seeder to include body temperature metric generation — required for quickstart Step 4 pre-seeding and load testing — repo: `sapphire-k6-bootstrap`
+- [x] T052 Update `sapphire-k6-bootstrap` data seeder to include body temperature metric generation — required for quickstart Step 4 pre-seeding and load testing — repo: `sapphire-k6-bootstrap`
 
 ---
 

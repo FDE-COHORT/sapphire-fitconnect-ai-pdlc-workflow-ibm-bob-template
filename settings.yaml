@@ -65,16 +65,16 @@ pdlc:
   roles:
     # The submitter role; change submitter_role above to use a different entry.
     fde:
-      github_team: ""                # e.g. "my-org/fde-team"
+      github_team: "FDE-COHORT/sapphire-fde"                # e.g. "my-org/fde-team"
       github_users: []               # e.g. ["alice", "bob"]
     application_engineer:
-      github_team: ""                # e.g. "my-org/app-engineers"
+      github_team: "FDE-COHORT/sapphire-application-engineers"                # e.g. "my-org/app-engineers"
       github_users: []
     product_owner:
-      github_team: ""                # e.g. "my-org/product-owners"
+      github_team: "FDE-COHORT/sapphire-product-owners"                # e.g. "my-org/product-owners"
       github_users: []
     fda:
-      github_team: ""                # e.g. "my-org/fda-team"
+      github_team: "FDE-COHORT/sapphire-fda"                # e.g. "my-org/fda-team"
       github_users: []
 
 # ---------------------------------------------------------------------------
@@ -88,6 +88,9 @@ observe:
   db_path: ""
   project_id: ''
 
+observe:
+  db_path: "/Users/shanvernekar/.bob/db/bob.db"
+  project_id: 'file:/Users/shanvernekar/ai-projects/IBM-BOB-v1.1/sapphire-fitconnect-ai-pdlc-workflow-ibm-bob-template'
 # ---------------------------------------------------------------------------
 # Add further workspace-level settings below as needed, e.g.:
 #
