@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "jira": {
-      "command": "docker",
+      "command": "podman",
       "args": [
         "run",
         "--rm",
@@ -16,8 +16,8 @@
       ],
       "env": {
         "JIRA_URL": "https://jsw.ibm.com/",
-        "JIRA_USERNAME": "",
-        "JIRA_API_TOKEN": ""
+        "JIRA_USERNAME": "shan.vernekar@ibm.com",
+        "JIRA_API_TOKEN": "KhtJHtUcYQEVGVMjWtbo3ol33rWVgI8h8rBd8k"
       },
       "alwaysAllow": [
         "jira_transition_issue",
@@ -98,10 +98,10 @@
         "ghcr.io/github/github-mcp-server"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "",
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}",
         "GITHUB_TOOLSETS": "",
         "GITHUB_READ_ONLY": "",
-        "GITHUB_HOST": "https://github.ibm.com"
+        "GITHUB_HOST": "https://github.com"
       },
       "alwaysAllow": [
         "list_pull_requests"
@@ -130,8 +130,9 @@
       "type": "streamable-http",
       "url": "https://servicesessentials.ibm.com/mcp-gateway/service/gateway/servers/8ccdd203bdee4014b08e82eedb6046e2/mcp",
       "headers": {
-        "Authorization": "Bearer ",
-        "x-api-key": ""
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlzcyI6Im1jcGdhdGV3YXkiLCJhdWQiOiJtY3BnYXRld2F5LWFwaSIsImlhdCI6MTc2NzY3NjkxMywianRpIjoiZDg3ZGFkOTUtMGI3YS00YzIzLTliZjgtZDgzMjIwZDg4ZWJiIiwidXNlciI6eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiZnVsbF9uYW1lIjoiQVBJIFRva2VuIFVzZXIiLCJpc19hZG1pbiI6dHJ1ZSwiYXV0aF9wcm92aWRlciI6ImFwaV90b2tlbiJ9LCJ0ZWFtcyI6WyI5ZjIyNDg1MGFlYWM0MWZiYjY0OWVkNTk0NDAwZjYzZSJdLCJuYW1lc3BhY2VzIjpbInVzZXI6YWRtaW5AZXhhbXBsZS5jb20iLCJwdWJsaWMiLCJ0ZWFtOjlmMjI0ODUwYWVhYzQxZmJiNjQ5ZWQ1OTQ0MDBmNjNlIl0sImV4cCI6MjA4MzAzNjkxMywic2NvcGVzIjp7InNlcnZlcl9pZCI6bnVsbCwicGVybWlzc2lvbnMiOlsic2VydmVycy5jcmVhdGUiLCJzZXJ2ZXJzLnJlYWQiLCJzZXJ2ZXJzLnVwZGF0ZSIsInNlcnZlcnMuZGVsZXRlIiwiZ2F0ZXdheXMucmVhZCIsInRvb2xzLnJlYWQiLCJ0b29scy5leGVjdXRlIl0sImlwX3Jlc3RyaWN0aW9ucyI6W10sInRpbWVfcmVzdHJpY3Rpb25zIjp7fX19.O1V0y1pJvyFwzxLVy36xO_yUKOkVvmFCAAhbXzmJ0hk",
+        "x-api-key": "6532b2b5-952c-44cc-a05c-883caaac2c27"
+        //ak_r80Kzt_8SX3mpXXIFMPlSI4_uZXxQ2gXBaLGbpFkM8A
       },
       "disabledTools": [
         "context-broker-vector-query",

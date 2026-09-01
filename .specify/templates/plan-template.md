@@ -50,6 +50,7 @@
 | 15 | Distributed traces emitted via OTEL SDK; W3C traceparent propagation used; DB, HTTP, and Kafka operations instrumented as child spans | IV. Observability | [ ] |
 | 16 | OTEL_EXPORTER_OTLP_ENDPOINT, OTEL_SERVICE_NAME, and OTEL_DEPLOYMENT_ENVIRONMENT set in every container; no direct backend export from services | IV. Observability | [ ] |
 | 17 | *(LangGraph only)* Graph state typed as `TypedDict` with `Annotated` reducers; graph compiled once at startup; nodes are single-responsibility `async`; persistent checkpointer used in production; tool schemas use Pydantic v2 `BaseModel`; trace output enabled in non-local environments | I. Code Quality | [ ] |
+| 18 | *(If story touches a public API)* Backward-compatibility assessment completed: breaking vs non-breaking classified, MAJOR version bump planned if breaking, migration guide and deprecation notice drafted, affected integration partners identified | V. API Backward Compatibility | [ ] |
 
 ## Project Structure
 

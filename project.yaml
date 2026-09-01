@@ -1,13 +1,123 @@
-project_name: Your-project-name
-project_description: Your-project-description
+project_name: Sapphire FitConnect
+project_description: A comprehensive digital wellness platform providing personalized health recommendations, partner services, and AI-powered wellness coaching
 settings_conf: settings.yaml
 source_repos:
-  - github_repo: Your-project-repo-1
-    name: Your-project-repo-1-name
+  - github_repo: https://github.com/FDE-COHORT/Sapphire.git
+    name: Sapphire
     language: typescript
     framework: react
 
-  - github_repo: Your-project-repo-2
-    name: Your-project-repo-2-name
+  - github_repo: https://github.com/FDE-COHORT/sapphire-bff-api.git
+    name: sapphire-bff-api
     language: javascript
     framework: node/express/apollo-server
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-user-service.git
+    name: sapphire-user-service
+    language: java
+    framework: spring-boot
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-wellness-partner-service.git
+    name: sapphire-wellness-partner-service
+    language: java
+    framework: spring-boot
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-recommendation-engine.git
+    name: sapphire-recommendation-engine
+    language: java
+    framework: spring-boot
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-notification-api.git
+    name: sapphire-notification-api
+    language: java
+    framework: spring-boot/kafka
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-charting-api.git
+    name: sapphire-charting-api
+    language: java
+    framework: spring-boot
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-event-ingestion-api.git
+    name: sapphire-event-ingestion-api
+    language: python
+    framework: fastapi/kafka
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-kafka-pipeline.git
+    name: sapphire-kafka-pipeline
+    language: json
+    framework: kafka-connect
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-user-wellness-summary.git
+    name: sapphire-user-wellness-summary
+    language: python
+    framework: fastapi/ollama
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-wellness-coach.git
+    name: sapphire-wellness-coach
+    language: python
+    framework: langgraph/ollama/fastapi
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-wellness-knowledge-agent.git
+    name: sapphire-wellness-knowledge-agent
+    language: python
+    framework: fastapi/qdrant/a2a
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-business-onboarding-service.git
+    name: sapphire-business-onboarding-service
+    language: java
+    framework: spring-boot/temporal
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-playwright.git
+    name: sapphire-playwright
+    language: typescript
+    framework: playwright
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-k6.git
+    name: sapphire-k6
+    language: javascript
+    framework: k6
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-k6-bootstrap.git
+    name: sapphire-k6-bootstrap
+    language: javascript
+    framework: k6
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-fitconnect-agents-deep-eval.git
+    name: sapphire-fitconnect-agents-deep-eval
+    language: python
+    framework: deepeval
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-partner-service-search.git
+    name: sapphire-partner-service-search
+    language: java
+    framework: spring-boot
+
+  - github_repo: https://github.com/FDE-COHORT/recommendation-workflow-service.git
+    name: recommendation-workflow-service
+    language: java
+    framework: spring-boot/temporal
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-wellness-mcp.git
+    name: sapphire-wellness-mcp
+    language: python
+    framework: fastmcp
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-user-mcp.git
+    name: sapphire-user-mcp
+    language: python
+    framework: fastmcp
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-embedding-service.git
+    name: sapphire-embedding-service
+    language: java
+    framework: spring-boot/ollama
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-kafka-streams-consumer.git
+    name: sapphire-kafka-streams-consumer
+    language: java
+    framework: spring-boot/kafka-streams
+
+  - github_repo: https://github.com/FDE-COHORT/sapphire-setup-podman.git
+    name: sapphire-setup-podman
+    language: yaml
+    framework: podman
